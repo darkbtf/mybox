@@ -1,0 +1,25 @@
+{
+  "name": "mybox",
+  "version": "1.0.0",
+  "description": "My cloud storage.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/darkbtf/mybox"
+  },
+  "keywords": [
+    "cloud"
+  ],
+  "author": "darkbtf",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/darkbtf/mybox/issues"
+  },
+  "homepage": "https://github.com/darkbtf/mybox",
+  "dependencies": {
+    "express": "^4.10.6"
+  }
+}
