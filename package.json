@@ -4,6 +4,7 @@
   "description": "My cloud storage.",
   "main": "app.js",
   "scripts": {
+    "start": "node app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -20,6 +21,10 @@
   },
   "homepage": "https://github.com/darkbtf/mybox",
   "dependencies": {
-    "express": "^4.10.6"
+    "body-parser": "^1.10.0",
+    "ejs": "^2.0.8",
+    "express": "^4.10.6",
+    "morgan": "^1.5.0",
+    "multer": "^0.1.6"
   }
 }

@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Home</title>
+    <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/semantic-ui/1.2.0/semantic.min.css">
+    <style type="text/css">
+      #content {
+        width: 1024px;
+        padding-top: 40px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+    </style>
+    <script>
+      var showUploadModal = function() {
+        console.log('QQ');
+        $(".ui.modal").modal('show');
+      };
+      var deleteFile = function(filename) {
+        console.log(filename);
+        $(".dimmer").show();
+        $.get('/delete/' + filename, function() {
+          $("#" + filename).hide();
+          $(".dimmer").hide();
+        });
+      };
+    </script>
+  </head>
+  <body>
+    <div class="ui active dimmer">
+      <div class="ui loader"></div>
+    </div>
+    <div class="ui inverted black fixed menu">
+      <div class="item">
+        <i class="dashboard icon">
+        </i>
+        TentacleCloud
+      </div>
+      <a class="active item">
+        <i class="home icon"></i> Home
+      </a>
+    </div>
+
+    <div id="content">
+      <div class="ui stacked segment">
+        <div class="ui grid">
+          <div class="fourteen wide column">
+            <h1 class="ui header">
+              <i class="ui home icon"></i>
+              MyBox
+            </h1>
+          </div>
+          <div class="one wide column">
+            <div class="ui primary button" onclick="showUploadModal()">
+              Upload
+            </div>
+          </div>
+        </div>
+        <table class="ui table">
+          <thead>
+            <tr>
+              <th class="six wide">Filename</th>
+              <th class="four wide">Size</th>
+              <th class="four wide">Last Modified</th>
+              <th>Delete</th>
+            </tr>
+          </thead>
+          <%
+            var currentFolder = '/';
+
+          %>
+          <tbody>
+            <% for (var i = 0; i < fileList.length; ++i) { %>
+            <tr id="<%= fileList[i].filename %>">
+              <td>
+                <i class="file icon"></i>
+                <a href="<%= fileList[i].path %>">
+                  <%= fileList[i].filename %>
+                </a>
+              </td>
+              <td><%= fileList[i].size %></td>
+              <td><%= fileList[i].lastModified %></td>
+              <td class="collapsing">
+                <div class="ui tiny red button"
+                     onclick=deleteFile("<%= fileList[i].filename %>")>
+                  Delete
+                </div>
+              </td>
+            </tr>
+            <% } %>
+          </tbody>
+
+        </table>
+      </div>
+
+    </div>
+    <div class="ui modal">
+      <i class="close icon"></i>
+      <div class="header">
+        Select a File to Upload
+      </div>
+      <div class="content">
+        <div class="description">
+          <div class="ui grid">
+            <div class="six wide column">
+              <div class="ui fluid input">
+                <input id="filename" type="text" placeholder="No file selected ..." disabled />
+              </div>
+            </div>
+            <div class="four wide column">
+              <label for="file" class="ui icon button">
+                <i class="file icon"></i>
+                Open File
+                <input type="file" id="file" style="display: none;">
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="actions">
+        <div class="ui black button">
+          Cancel
+        </div>
+        <div id="upload" class="ui primary right button">
+          Upload!
+        </div>
+      </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/semantic-ui/1.2.0/semantic.min.js"></script>
+    <script>
+      (function() {
+        // UI Initialization
+        $('.ui.modal').modal();
+        $('.dimmer').hide();
+        console.log('wtf');
+
+        var file = null;
+        // Upload File
+        var prepareUpload = function(event) {
+          file = event.target.files[0];
+          console.log(file);
+          $('#filename').val(file.name);
+          console.log(event);
+        };
+
+        $('input[type=file]').on('change', prepareUpload);
+
+        $('#upload').click(function() {
+
+          var data = new FormData();
+          /*$.each(files, function(key, value) {
+            console.log('key = ' + key + ', value = ' + value);
+            data.append(key, value);
+          });*/
+          data.append('file', file);
+
+          $.ajax({
+            url: '/upload',
+            type: 'POST',
+            data: data,
+            cache: false,
+            dataType: 'json',
+            processData: false, // Don't process the files
+            contentType: false, // Set content type to false as jQuery will tell the server its a query string request
+            success: function(data, textStatus, jqXHR) {
+              location.href = '/';
+            }
+          });
+        });
+      }) ();
+    </script>
+  </body>
+</html>
